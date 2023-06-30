@@ -6,7 +6,7 @@
   "homepage": "https://jmkl.github.io/KeyPadGen/",
   "scripts": {
     "dev": "vite --force",
-    "build": "vite build",
+    "build": "vite --force build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
