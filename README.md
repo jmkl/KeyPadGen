@@ -1,4 +1,4 @@
 # **Keypad Generator**
 
-go here :**[LINK]**(https://jmkl.github.io/KeypadGen/)
+## go here :***[KeyPadGen](https://jmkl.github.io/KeyPadGen/)***
 
