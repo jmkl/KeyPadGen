@@ -1,4 +1,4 @@
-import { Grid, TextField, Autocomplete, Paper } from "@mui/material";
+import { Grid, TextField, Autocomplete, Paper, Box, Typography } from "@mui/material";
 
 export function KeyGrid(props) {
   const keys = [
@@ -6,8 +6,8 @@ export function KeyGrid(props) {
     "MOD2",
     "KC.HYPR",
     "KC.MEH",
-    "KC.LCTRL",
-    "KC.LSHIFT",
+    "KC.LCTL",
+    "KC.LSFT",
     "KC.LALT",
     "KC.LGUI",
     "KC.A",
@@ -88,7 +88,6 @@ export function KeyGrid(props) {
     "KC.F23",
     "KC.F24",
     "KC.PSCREEN",
-    "KC.SCROLLLOCK",
     "KC.PAUSE",
     "KC.INSERT",
     "KC.HOME",
@@ -140,7 +139,7 @@ export function KeyGrid(props) {
           </Grid>
           <Grid item xs={12}>
             <Autocomplete
-
+              disableCloseOnSelect
               multiple
               defaultValue={props.Keys.keys || ""}
               limitTags={2}
@@ -151,6 +150,16 @@ export function KeyGrid(props) {
                 props.Keys.keys = value;
                 props.onEdit();
 
+              }}
+              renderOption={(prps, option, { selected }) => {
+                return (<li {...prps}>
+                  <Box component="span" sx={{ display: "flex", }}>
+                    <Typography variant="caption" display="block" >
+                      {option}
+                    </Typography>
+
+                  </Box>
+                </li>)
               }}
               renderInput={(params) => (
                 <TextField
