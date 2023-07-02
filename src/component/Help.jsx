@@ -1,6 +1,9 @@
-import { DataGrid,  GridToolbarContainer,
-    GridToolbarFilterButton, } from "@mui/x-data-grid";
+import {
+    DataGrid, GridToolbarContainer,
+    GridToolbarFilterButton,
+} from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { chuckArray } from "../utils/datautil";
 
 const kmkeys = [
     {
@@ -1085,30 +1088,34 @@ const kmkeys = [
     }
 ]
 const columns = [
-  { field: "col1", headerName: "Key", width: 200 },
-  { field: "col2", headerName: "Alias", width: 200 },
-  { field: "col3", headerName: "Desc", width: 600 },
+    { field: "col1", headerName: "Key", width: 200 },
+    { field: "col2", headerName: "Alias", width: 200 },
+    { field: "col3", headerName: "Desc", width: 600 },
 ];
 
 
 export const Help = () => {
+    useEffect(() => {
+        const res = chuckArray(kmkeys.map((k) => k.col1), 16);
+        console.log(res);
+    }, [])
     function CustomToolbar() {
         return (
-          <GridToolbarContainer>
-            <GridToolbarFilterButton />
-          </GridToolbarContainer>
+            <GridToolbarContainer>
+                <GridToolbarFilterButton />
+            </GridToolbarContainer>
         );
-      }
-  return (
-    <div style={{ height: 350, width: '100%' }}>
-       <DataGrid rows={kmkeys} columns={columns} 
-       
-       initialState={{
-        pagination: {
-          paginationModel: { pageSize: 200, page: 0 },
-        },
-      }}
-       slots={{ toolbar: CustomToolbar }} />
-       </div>
-  );
+    }
+    return (
+        <div style={{ height: 350, width: '100%' }}>
+            <DataGrid rows={kmkeys} columns={columns}
+
+                initialState={{
+                    pagination: {
+                        paginationModel: { pageSize: 200, page: 0 },
+                    },
+                }}
+                slots={{ toolbar: CustomToolbar }} />
+        </div>
+    );
 };
