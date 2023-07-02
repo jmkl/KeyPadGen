@@ -167,7 +167,7 @@ export function JDialog(props) {
     "KC.LANG8",
     "KC.LANG9",
   ];
-  
+
 
   return (
     <Modal
@@ -207,12 +207,12 @@ export function JDialog(props) {
 
           <Autocomplete
             multiple
-           
+
             size="small"
             defaultValue={props.currentKey.keys || ""}
             options={optionskey}
             sx={{ width: '100%' }}
-            onChange={(ev,val)=>{
+            onChange={(ev, val) => {
               props.currentKey.keys = val;
             }}
             renderInput={(params) => (

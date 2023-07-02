@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { MainApp } from './MainApp';
+import { MainAppv2 } from './MainAppv2';
 const darkTheme = createTheme({
 
   palette: {
@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <MainApp/>
+      <MainAppv2/>
     </ThemeProvider>
     
   </React.StrictMode>,

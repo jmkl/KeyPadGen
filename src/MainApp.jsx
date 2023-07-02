@@ -7,6 +7,7 @@ import {
   Container,
   Button,
   TextField,
+  Paper,
 } from "@mui/material";
 import { JDialog } from "./component/JDialog";
 import * as htmlToImage from "html-to-image";
@@ -15,43 +16,52 @@ import { styled } from "@mui/system";
 import { Help } from "./component/Help";
 // prettier-ignore
 
-const JCode = styled('pre')({
+const JCode = styled('div')({
   '&:hover':{
     color:"#fd0",
-    paddingLeft:"150px",
-    transition:'all .2s ease-in'
+    transition:'all .2s ease-in'    
+  },
+  '& pre':{
+    position:"absolute",
     
+  },
+  '& Button':{
+    position:"absolute",
+    top:"10px",
+    right:"10px"
   },
   '&:active':{
     color:"#fd0",
-    paddingLeft:"150px",
     
     transition:'all .2s ease-out'
     
   },
-  padding:"40px",
-    
+  background:"#333",
+  height:'350px',
+  position:"relative",
+  padding:"40px", 
   lineHeight:'95%',
   fontFamily: "FantasqueSansMono Nerd Font Mono",
   cursor:'pointer',
   fontSize: ".7rem",
-  transition:'all .2s ease-in'
+  transition:'all .2s ease-in',
+  marginBottom:"20px",
+  borderRadius:"10px"
   
  
 })
 
 export const MainApp = () => {
   const [load, setLoad] = useState("Loading...");
-  const [whichButton,setWhichButton]=useState(-1);
+  const [whichButton, setWhichButton] = useState(-1);
   const [isLoad, setIsLoad] = useState(false);
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState(false);
   const [key, setKey] = useState({ name: `NULL`, id: -1, keys: [] });
   const [allKeys, setAllKeys] = useState([]);
-  const [allButton,setAllButton]=useState([]);
+  const [allButton, setAllButton] = useState([]);
 
   const [generateKey, setGenerateKey] = useState("");
-
 
   useEffect(() => {
     setLoad("");
@@ -62,13 +72,17 @@ export const MainApp = () => {
     if (isLoad) {
       setIsLoad(false);
       const items = JSON.parse(localStorage.getItem("items"));
-      if(items && items.length>0){
-        setAllKeys(items);        
-        setAllButton(items.map((ab)=>{return ab.name}))
+      if (items && items.length > 0) {
+        setAllKeys(items);
+        setAllButton(
+          items.map((ab) => {
+            return ab.name;
+          })
+        );
         console.log(allButton);
-      }else{
+      } else {
         for (let index = 0; index < 16; index++) {
-         setAllButton((allButton)=>[...allButton,`KEY${index}`])
+          setAllButton((allButton) => [...allButton, `KEY${index}`]);
           setAllKeys((allKeys) => [
             ...allKeys,
             { name: `KEY${index}`, id: index, keys: [] },
@@ -114,9 +128,8 @@ export const MainApp = () => {
     return str;
   }
 
-  
   return (
-    <Container sx={{paddingTop:'150px'}} >
+    <Container sx={{ paddingTop: "150px" }}>
       <Box sx={{ flexGrow: 1 }}>
         <Stack direction="column" spacing={2}>
           <Box
@@ -208,28 +221,38 @@ export const MainApp = () => {
             }
           }}
           value={generateKey} /> */}
-          <JCode onClick={(e)=>{
-            navigator.clipboard.writeText(e.target.value);
-            setToast(true);
-          }}>
-            <code>{generateKey}</code>
+          <JCode
+          
+          >
+            <Button variant="outlined" size="small"
+              onClick={(e) => {
+                navigator.clipboard.writeText(generateKey);
+              setToast(true);
+            }}>Copy</Button>
+            <pre>
+              <code>{generateKey}</code>
+            </pre>
           </JCode>
         </Stack>
       </Box>
-      <Help/>
-      <JDialog showme={open} 
-      currentKey={key} 
-      which={whichButton}
-      close={
-        () => { 
-        allButton[whichButton] = allKeys[whichButton].name;
-          setAllKeys((allKeys) => [...allKeys]);        
-          setOpen(false)}
-        } />
+      <Help />
+      <JDialog
+        showme={open}
+        currentKey={key}
+        which={whichButton}
+        close={() => {
+          allButton[whichButton] = allKeys[whichButton].name;
+          setAllKeys((allKeys) => [...allKeys]);
+          setOpen(false);
+        }}
+      />
       <StyleToast
         autoHideDuration={1000}
         open={toast}
-        onClose={() => setToast(false)}>Copied!!</StyleToast>
+        onClose={() => setToast(false)}
+      >
+        Copied!!
+      </StyleToast>
     </Container>
   );
 };
