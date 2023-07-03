@@ -1,5 +1,5 @@
 import { Grid, TextField, Autocomplete, Paper, Box, Typography } from "@mui/material";
-
+import { falist, materialList } from "../utils/falist";
 export function KeyGrid(props) {
   const keys = [
     "MOD",
@@ -119,10 +119,12 @@ export function KeyGrid(props) {
     "KC.KP_COMMA"
 
   ];
+
   return (
     <Grid sx={{}} item xs={3}>
       <Paper elevation={0} sx={{ padding: "10px", border: "solid 1px #333", borderRadius: "10px" }}>
         <Grid container spacing={1}>
+
           <Grid item xs={12}>
             <TextField
               focused
@@ -136,6 +138,34 @@ export function KeyGrid(props) {
                 props.onEdit();
               }}
               sx={{ width: "100%" }} />
+          </Grid>
+          <Grid item xs={12}>
+
+            <Autocomplete
+              defaultValue={props.Keys.icon || ""}
+              options={props.iconList}
+              renderOption={(propss, option) => (
+                <Box component="li"{...propss}>
+                  {option}
+                </Box>
+              )}
+              onChange={(index, value) => {
+                props.Keys.icon = value;
+                props.onEdit();
+
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  size="small"
+
+                  variant="filled"
+                  InputProps={{ ...params.InputProps, style: { fontSize: 15, padding: '3px' } }}
+
+
+
+                />
+              )} />
           </Grid>
           <Grid item xs={12}>
             <Autocomplete
