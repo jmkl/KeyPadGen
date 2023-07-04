@@ -1,225 +1,302 @@
 import {
-    ButtonGroup,
-    Box,
-    Grid,
-    Container,
-    Button,
-    Stack,
-    FormControlLabel,
-    Checkbox,
-    styled,
-    Input,
-    Typography,
-    TextField,
-} from "@mui/material"
-import { KeyGrid } from "./component/KeyGrid"
-import { useEffect, useState } from "react"
+	Box,
+	Grid,
+	Container,
+	Button,
+	Stack,
+	FormControlLabel,
+	Checkbox,
+	styled,
+	Typography,
+	IconButton,
+} from "@mui/material";
+import { MuiColorInput } from "mui-color-input";
+import { KeyGrid } from "./component/KeyGrid";
+import { useEffect, useState } from "react";
 import { buildString } from "./utils/datautil";
 import { JCode } from "./component/JCode";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import html2canvas from 'html2canvas';
-import Icon from '@mui/material/Icon';
-import { css } from "@mui/system";
+import html2canvas from "html2canvas";
+import Icon from "@mui/material/Icon";
 import { materialList } from "./utils/falist";
-
-const StyleButton = styled(Button)(({ theme }) => ({
-    padding: "0px 10px 0px",
-    fontSize: '0.8rem',
-    margin: '0',
-    color: theme.palette.secondary.secondary
-}));
+import "./css/mainv2.css";
+import { ICListModal } from "./component/ICListModal";
+import { FileUploadOutlined } from "@mui/icons-material";
 
 function downloadObjectAsJson(exportObj, exportName) {
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-    var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", exportName + ".json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+	var dataStr =
+		"data:text/json;charset=utf-8," +
+		encodeURIComponent(JSON.stringify(exportObj));
+	var downloadAnchorNode = document.createElement("a");
+	downloadAnchorNode.setAttribute("href", dataStr);
+	downloadAnchorNode.setAttribute("download", exportName + ".json");
+	document.body.appendChild(downloadAnchorNode); // required for firefox
+	downloadAnchorNode.click();
+	downloadAnchorNode.remove();
 }
 
 export const MainAppv2 = () => {
-    const [klist, setKlist] = useState([]);
-    const [load, setLoad] = useState("Loading...");
-    const [isLoad, setIsLoad] = useState(false);
-    const KEYITEM = "keyitems";
-    const [generateKey, setGenerateKey] = useState("Do some magic...");
-    const [genBtn, setGenBtn] = useState("Generate");
-    const [dl, setDl] = useState(false)
-    const [icColor, setIcColor] = useState("#fff");
+	const [klist, setKlist] = useState([]);
+	const [load, setLoad] = useState("Loading...");
+	const [isLoad, setIsLoad] = useState(false);
+	const KEYITEM = "keyitems";
+	const [generateKey, setGenerateKey] = useState("Do some magic...");
+	const [genBtn, setGenBtn] = useState("Generate");
+	const [dl, setDl] = useState(false);
+	const [icColor, setIcColor] = useState("#fff");
+	const [open, setOpen] = useState(false);
+	const [currentIconIndex, setCurrentIconIndex] = useState(-1);
+	let tout = null;
 
+	useEffect(() => {
+		setLoad("");
+		setIsLoad(true);
+	}, []);
 
+	useEffect(() => {
+		if (klist.length > 0) {
+			localStorage.setItem(KEYITEM, JSON.stringify(klist));
+		}
+	}, [klist]);
 
-    useEffect(() => {
+	useEffect(() => {
+		if (!isLoad) {
+			setKlist([]);
+			return;
+		}
 
-        setLoad("");
-        setIsLoad(true);
-    }, []);
+		const items = JSON.parse(localStorage.getItem(KEYITEM));
 
-    useEffect(() => {
-        if (klist.length > 0) {
-            localStorage.setItem(KEYITEM, JSON.stringify(klist));
-        }
-    }, [klist]);
+		if (items && items.length > 0) {
+			setKlist(items);
+		} else {
+			for (let index = 0; index < 16; index++) {
+				setKlist((klist) => [
+					...klist,
+					{
+						name: `Key${index + 1}`,
+						icon: "",
+						id: index,
+						keys: [],
+					},
+				]);
+			}
+		}
+	}, [load]);
+	function doChangeColor(color) {
+		setIcColor(color);
+	}
 
-    useEffect(() => {
-        if (!isLoad) {
-            setKlist([]);
-            return;
-        }
+	function handleColorChange(color) {
+		if (tout) {
+			window.clearTimeout(tout);
+		}
+		tout = window.setTimeout(() => doChangeColor(color), 100);
+	}
 
-        const items = JSON.parse(localStorage.getItem(KEYITEM))
+	const colorstyle = {
+		color: {
+			color: icColor,
+		},
+	};
 
-        if (items && items.length > 0) {
-            setKlist(items);
-        } else {
-            for (let index = 0; index < 16; index++) {
-                setKlist((klist) => [
-                    ...klist, {
-                        name: `Key${index + 1}`,
-                        icon: '',
-                        id: index,
-                        keys: []
-                    }
-                ])
-            }
-        }
+	return (
+		<Container sx={{ paddingTop: "50px" }}>
+			<Box
+				sx={{
+					marginBottom: "20px",
+					display: "flex",
+					flexGrow: 0,
+					justifyItems: "center",
+					alignItems: "center",
+					justifyContent: "center",
+					width: "100%",
+				}}
+			>
+				<Grid
+					id="keypad"
+					sx={{
+						background: "transparent",
+						width: "400px",
+						height: "400px",
+					}}
+					container
+				>
+					{klist.map((value, index) => {
+						return (
+							<Grid
+								key={index}
+								item
+								xs={3}
+							>
+								<Stack
+									className="stack"
+									spacing={1}
+								>
+									<Icon
+										style={colorstyle.color}
+										sx={{
+											fontSize: "2.2rem",
+										}}
+									>
+										{value.icon}
+									</Icon>
 
-    }, [load]);
+									{/**<FontAwesomeIcon size="2x" icon={value.icon ? value.icon : ['fab', value.icon]} />*/}
+									<Typography
+										variant="caption"
+										style={colorstyle.color}
+										sx={{
+											fontSize: "0.5rem",
+											fontWeight: "900",
+										}}
+									>
+										{" "}
+										{value.name.toUpperCase()}
+									</Typography>
+								</Stack>
+							</Grid>
+						);
+					})}
+				</Grid>
+			</Box>
+			<Stack
+				direction="row"
+				spacing={3}
+				sx={{
+					marginBottom: "20px",
+					display: "flex",
+					flexGrow: 1,
+					alignItems: "center",
+					justifyContent: "center",
+					width: "100%",
+				}}
+			>
+				<Button
+					color="success"
+					variant="outlined"
+					size="small"
+					onClick={() => {
+						setKlist((klist) => [...klist]);
+						setGenBtn("Generate");
+					}}
+				>
+					Save
+				</Button>
+				<Button
+					color="success"
+					variant="outlined"
+					size="small"
+					onClick={() => {
+						const keypack = buildString(klist);
+						setGenerateKey(keypack);
+						navigator.clipboard.writeText(keypack);
+						setGenBtn("Copied");
+						if (dl) downloadObjectAsJson(klist, "hello.json");
+					}}
+				>
+					{genBtn}
+				</Button>
+				<Button
+					color="success"
+					variant="outlined"
+					size="small"
+					onClick={() => {
+						html2canvas(document.getElementById("keypad"), {
+							backgroundColor: null,
+							allowTaint: true,
+							useCORS: true,
+						}).then(function (canvas) {
+							var link = document.createElement("a");
+							link.download = "keypad_.png";
+							link.href = canvas.toDataURL("image/png");
+							link.click();
+						});
+					}}
+				>
+					Download Image
+				</Button>
+				<IconButton
+					aria-label="delete"
+					color="success"
+					size="small"
+				>
+					<label
+						size="small"
+						htmlFor="raise-button-file"
+					>
+						<FileUploadOutlined />
+					</label>
+					<input
+						type="file"
+						hidden
+						id="raise-button-file"
+						onChange={(e) => {
+							var fr = new FileReader();
+							fr.onload = function () {
+								setKlist(JSON.parse(fr.result));
+							};
+							fr.readAsText(e.target.files[0]);
+						}}
+					/>
+				</IconButton>
+				<FormControlLabel
+					control={
+						<Checkbox
+							color="success"
+							size="small"
+							checked={dl}
+							onChange={(ev) => setDl(ev.target.checked)}
+						/>
+					}
+					label="Download config"
+				/>
+				<MuiColorInput
+					format="hex"
+					size="small"
+					variant="outlined"
+					value={icColor}
+					onChange={handleColorChange}
+				/>
+			</Stack>
+			<Box sx={{ flexGrow: 1, transform: "scale(0.9)" }}>
+				<Grid
+					container
+					spacing={1}
+				>
+					{klist.map((value, index) => {
+						return (
+							<KeyGrid
+								idx={index}
+								iconList={materialList}
+								GetIcon={(id) => {
+									setCurrentIconIndex(id);
+									setOpen(true);
+								}}
+								Keys={klist[index]}
+								key={index}
+							/>
+						);
+					})}
+				</Grid>
+			</Box>
+			<Box>
+				<JCode>
+					<pre>
+						<code>{generateKey}</code>
+					</pre>
+				</JCode>
+			</Box>
 
-    const StyleStack = styled(Stack)(({ theme }) => ({
-        '&': css`position: relative;
-                justify-content: center;
-                align-items: center;
-                width:100%;
-                height:100%;
-                background:linear-gradient(to top,rgba(20,0,200,.01),rgba(100,0,200,.05)),linear-gradient(#222,#111 10%);
-                border: 1px solid #040404;
-                border-bottom: 5px solid #000;
-                border-top:1 px solid #555;
-                outline: none;
-                border-radius: 10px;                     
-                cursor: pointer;
-                transition:all .1s ease-in;
-                `,
-        '&:hover': css`
-                background:linear-gradient(to top,rgba(120,0,200,.1),rgba(100,0,200,.05)),linear-gradient(#222,#111 10%);
-                border-bottom: 5px solid rgba(120,0,200,.1);
-                transition:all .1s ease-in;
-                box-shadow:0 12px 10px rgba(0,0,0,.5);
-        `
-    }));
-
-    return (
-        <Container sx={{ paddingTop: "50px" }}>
-
-            <Box sx={{
-
-                marginBottom: "20px",
-                display: "flex",
-                flexGrow: 0,
-                justifyItems: "center",
-                alignItems: 'center', justifyContent: "center", width: "100%"
-            }}>
-
-
-                <Grid id="keypad" sx={{ background: 'transparent', width: "400px", height: "400px" }} container  >
-                    {klist.map((value, index) => {
-
-                        return <Grid key={index} item xs={3}>
-                            <StyleStack spacing={1}
-
-                            >
-                                <Icon sx={{ fontSize: "2.2rem", color: icColor }}>{value.icon}</Icon>
-
-                                {/**<FontAwesomeIcon size="2x" icon={value.icon ? value.icon : ['fab', value.icon]} />*/}
-                                <Typography variant="caption" sx={{ fontSize: "0.5rem", fontWeight: "900", color: icColor }}> {value.name.toUpperCase()}</Typography>
-
-
-                            </StyleStack>
-
-                        </Grid>
-
-                    })}
-                </Grid>
-            </Box>
-            <Box sx={{ marginBottom: "20px", display: "flex", flexGrow: 1, alignItems: 'center', justifyContent: "center", width: "100%" }}>
-                <ButtonGroup sx={{ height: '40px' }}>
-                    <StyleButton
-
-                        onClick={() => {
-                            setKlist((klist) => [...klist]);
-                            setGenBtn("Generate");
-                        }}
-                    >Save</StyleButton>
-                    <StyleButton
-                        onClick={() => {
-                            const keypack = buildString(klist);
-                            setGenerateKey(keypack);
-                            navigator.clipboard.writeText(keypack);
-                            setGenBtn("Copied");
-                            if (dl)
-                                downloadObjectAsJson(klist, "hello.json");
-                        }}
-                    >{genBtn}</StyleButton>
-
-                    <StyleButton
-
-                        onClick={() => {
-                            html2canvas(document.getElementById("keypad"),
-                                {
-                                    backgroundColor: null,
-                                    allowTaint: true,
-                                    useCORS: true
-                                }).then(function (canvas) {
-                                    var link = document.createElement("a");
-                                    link.download = "keypad_.png";
-                                    link.href = canvas.toDataURL("image/png");
-                                    link.click();
-
-                                });
-
-
-                        }}
-                    >Download Image</StyleButton>
-                    <Input type="file" onChange={(e) => {
-                        var fr = new FileReader();
-                        fr.onload = function () {
-                            setKlist(JSON.parse(fr.result))
-
-                        }
-                        fr.readAsText(e.target.files[0])
-                    }} />
-                    <Box sx={{ flexGrow: 1, transform: "scale(0.6)", }}>
-                        <FormControlLabel control={
-                            <Checkbox checked={dl} onChange={(ev) => setDl(ev.target.checked)} />} label="Download config" />
-                        <TextField value={icColor} onChange={(e) => { setIcColor(e.target.value) }} />
-                    </Box>
-
-                </ButtonGroup>
-            </Box>
-            <Box sx={{ flexGrow: 1, transform: "scale(0.9)", }}>
-                <Grid container spacing={1}>
-                    {klist.map((value, index) => {
-
-                        return <KeyGrid iconList={materialList} onEdit={() => {
-
-                        }} Keys={klist[index]}
-
-                            key={index} />
-                    })}
-                </Grid>
-            </Box>
-            <Box>
-                <JCode>
-                    <pre>
-                        <code>
-                            {generateKey}
-                        </code>
-                    </pre>
-                </JCode>
-            </Box>
-        </Container>
-    )
-}
+			<ICListModal
+				OpenMe={open}
+				IconIndex={currentIconIndex}
+				OnDialogClose={(result) => {
+					console.log(result);
+					klist[currentIconIndex].icon = result;
+					setKlist((klist) => [...klist]);
+					setOpen(false);
+				}}
+			/>
+		</Container>
+	);
+};
