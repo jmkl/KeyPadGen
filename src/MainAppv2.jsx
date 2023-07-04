@@ -20,7 +20,7 @@ import Icon from "@mui/material/Icon";
 import { materialList } from "./utils/falist";
 import "./css/mainv2.css";
 import { ICListModal } from "./component/ICListModal";
-import { FileUploadOutlined } from "@mui/icons-material";
+import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
 
 function downloadObjectAsJson(exportObj, exportName) {
 	var dataStr =
@@ -274,6 +274,8 @@ export const MainAppv2 = () => {
 								}}
 								Keys={klist[index]}
 								key={index}
+								// eslint-disable-next-line prettier/prettier
+								onEdit={() => { }}
 							/>
 						);
 					})}

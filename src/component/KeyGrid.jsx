@@ -163,7 +163,7 @@ export function KeyGrid(props) {
 							}}
 						>
 							<InputBase
-								focused
+								focused="true"
 								defaultValue={props.Keys.name}
 								size="small"
 								variant="filled"
