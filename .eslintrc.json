@@ -8,6 +8,13 @@
     "plugin:react/recommended",
     "plugin:prettier/recommended"
   ],
+  "array-element-newline": [
+    "error",
+    {
+      "ArrayExpression": "consistent",
+      "ArrayPattern": { "minItems": 3 }
+    }
+  ],
 
   "parserOptions": {
     "ecmaFeatures": { "jsx": true },
@@ -17,7 +24,7 @@
   "plugins": ["prettier", "react"],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off"
   }
