@@ -93,7 +93,8 @@ export const MainAppv2 = () => {
 		})
 	}
 
-	function handleColorChange(color) {
+	function handleColorChange(color, whichcolor) {
+
 
 		if (tout) {
 			window.clearTimeout(tout);
@@ -102,17 +103,22 @@ export const MainAppv2 = () => {
 		}
 		tout = window.setTimeout(async () => {
 
-			promiseState(setIcColor, color)
+
+			promiseState(whichcolor === "ICOLOR" ? setIcColor : setBgCol, color)
 
 
 		}, 300);
 	}
+	const [bgCol, setBgCol] = useState("#aadd00")
+	const bgstyle = `linear-gradient(to top, rgba(20, 0, 200, .01), rgba(100, 0, 200, .05)),linear-gradient(#22222252, #00000088 10%),linear-gradient(${bgCol}, ${bgCol})`
+
 
 	const colorstyle = {
 		color: {
 			color: icColor,
 		},
 	};
+
 
 	return (
 		<Container
@@ -146,7 +152,8 @@ export const MainAppv2 = () => {
 						{klist.map((value, index) => {
 							return (
 								<Grid sx={{ zIndex: `${100 - index}` }} key={index} item xs={3}>
-									<Stack className="stack" spacing={1}>
+									<Stack className="stack" spacing={1} sx={{ background: bgstyle }}>
+
 										<Icon
 											style={colorstyle.color}
 											sx={{
@@ -168,6 +175,7 @@ export const MainAppv2 = () => {
 											{' '}
 											{value.name.toUpperCase()}
 										</Typography>
+
 									</Stack>
 								</Grid>
 							);
@@ -270,7 +278,20 @@ export const MainAppv2 = () => {
 					size="small"
 					variant="outlined"
 					value={icColor}
-					onChange={handleColorChange}
+					id="ICOLOR"
+					onChange={(c, i) => {
+						handleColorChange(c, "ICOLOR");
+					}}
+				/>
+				<MuiColorInput
+					format="hex"
+					size="small"
+					variant="outlined"
+					id="BCOLOR"
+					value={bgCol}
+					onChange={(c, i) => {
+						handleColorChange(c, "BCOLOR");
+					}}
 				/>
 			</Stack>
 			<LinearProgress sx={{ display: progress }} color="success" />

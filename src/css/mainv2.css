@@ -4,7 +4,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(20, 0, 200, .01), rgba(100, 0, 200, .05)), linear-gradient(#222, #111 10%);
+
     border: 1px solid #040404;
     border-bottom: 5px solid #000;
     border-top: 1 px solid #555;
@@ -13,6 +13,9 @@
     cursor: pointer;
     transition: all .1s ease-in;
 
+}
+.stack2{
+  
 }
 
 .stack:hover {
